@@ -27,7 +27,7 @@ typedef struct _TFila {
   struct _TFila *prox;
 } TFila;
 
-// fun' para criar um novo no (diret' ou arquivo)
+// funcao para criar um novo no (diretorio ou arquivo)
 TVertice *criarNo(char *id, char *path, char tipo) {
   TVertice *novoNo = (TVertice *)malloc(sizeof(TVertice));
   strcpy(novoNo->id, id);
@@ -107,7 +107,6 @@ void percorrerProfundidade(TVertice *no) {
   }
 }
 
-
 // funçao para percorrer em largura
 void percorrerLargura(TVertice *raiz) {
   TFila *fila = NULL;
@@ -155,7 +154,6 @@ void percorrerLargura(TVertice *raiz) {
   }
 }
 
-
 // atual
 TVertice *encontrarDiretorio(TVertice *diretorioAtual, const char *path) {
   if (strcmp(diretorioAtual->path, path) == 0) {
@@ -174,7 +172,6 @@ TVertice *encontrarDiretorio(TVertice *diretorioAtual, const char *path) {
   return NULL;
 }
 
-
 TVertice *criarDiretorioNome(TVertice *diretorioAtual,
                              const char *nomeDiretorio) {
   TVertice *filho = diretorioAtual->filhos;
@@ -186,20 +183,19 @@ TVertice *criarDiretorioNome(TVertice *diretorioAtual,
     filho = filho->prox;
   }
 
-
   char novoPath[PATH + 1];
   sprintf(novoPath, "%s/%s", diretorioAtual->path, nomeDiretorio);
 
-  // Usando a fun' mkdir para criar o diret'
+  // Usando a funcao mkdir para criar o diretorio
   if (mkdir(novoPath, 0700) != 0) {
-    printf("Erro ao criar diret'.\n");
+    printf("Erro ao criar diretorio.\n");
     return NULL;
   }
 
-  // Criar o novo no para o diret'
+  // Criar o novo no para o diretorio
   TVertice *novoDiretorio = criarNo(nomeDiretorio, novoPath, 'd');
 
-  // Adicionar o novo diret' ‡ lista de filhos do diret' atual
+  // Adicionar o novo diretorio ‡ lista de filhos do diretorio atual
   if (diretorioAtual->filhos == NULL) {
     diretorioAtual->filhos = novoDiretorio;
   } else {
@@ -209,7 +205,6 @@ TVertice *criarDiretorioNome(TVertice *diretorioAtual,
     }
     ultimoFilho->prox = novoDiretorio;
   }
-
 
   novoDiretorio->dir_ant = diretorioAtual;
 
@@ -250,35 +245,34 @@ void carregarDiretorio(TVertice *diretorioAtual) {
   closedir(dir);
 }
 
-
 void iniciarCriacaoDiretorio(TVertice *raiz, TVertice *diretorioAtual) {
   char nomeDiretorio[IDNAME + 1];
-  printf("Digite o nome do diret' a ser criado: ");
+  printf("Digite o nome do diretorio a ser criado: ");
   scanf("%s", nomeDiretorio);
 
   TVertice *novoDiretorio = criarDiretorioNome(diretorioAtual, nomeDiretorio);
   if (novoDiretorio == NULL) {
-    printf("Falha ao criar o diret'.\n");
+    printf("Falha ao criar o diretorio.\n");
   }
 }
 
 TVertice *mudarDiretorio(TVertice *diretorioAtual, const char *nomeDiretorio);
 
-// fun' para mudar de diret'
+// funçao para mudar de diretorio
 //--------------------------------------------------------
-TVertice *diretorioAtual;  //Diretorio atual
-TVertice *diretorioOrigem; //Diretorio de origem
+TVertice *diretorioAtual;  // Diretorio atual
+TVertice *diretorioOrigem; // Diretorio de origem
 //--------------------------------------------------------
 
 TVertice *mudarDiretorioCorrente(TVertice *diretorioAtual,
                                  TVertice *diretorioOrigem) {
   char nomeDiretorio[IDNAME + 1];
-  printf("Digite o nome do diret' para acessar: ");
+  printf("Digite o nome do diretorio para acessar: ");
   getchar();
   fgets(nomeDiretorio, sizeof(nomeDiretorio), stdin);
   nomeDiretorio[strcspn(nomeDiretorio, "\n")] = '\0';
 
-  // Verificar se o usu·rio deseja voltar para o diret' de origem
+  // Verificar se o usu·rio deseja voltar para o diretorio de origem
   if (strcmp(nomeDiretorio, "raiz") == 0) {
     diretorioAtual = diretorioOrigem;
     printf("Diretorio atual: %s\n", diretorioAtual->path);
@@ -290,7 +284,7 @@ TVertice *mudarDiretorioCorrente(TVertice *diretorioAtual,
 
 TVertice *mudarDiretorio(TVertice *carregarDiretorio,
                          const char *nomeDiretorio) {
-  // Encontrar o diret' solicitado
+  // Encontrar o diretorio solicitado
   TVertice *filho = diretorioAtual->filhos;
 
   while (filho != NULL) {
@@ -305,7 +299,6 @@ TVertice *mudarDiretorio(TVertice *carregarDiretorio,
   printf("Erro:Diretorio '%s' n„o encontrado.\n", nomeDiretorio);
   return diretorioAtual;
 }
-
 
 void criarArquivo(TVertice *diretorioAtual, const char *nomeArquivo) {
   // Verificar se o arquivo j· existe
@@ -322,7 +315,7 @@ void criarArquivo(TVertice *diretorioAtual, const char *nomeArquivo) {
   char novoPath[PATH + 1];
   sprintf(novoPath, "%s/%s", diretorioAtual->path, nomeArquivo);
 
-  // Usando a fun' fopen para criar o arquivo
+  // Usando a funcao fopen para criar o arquivo
   FILE *novoArquivo = fopen(novoPath, "w");
   if (novoArquivo == NULL) {
     printf("Erro ao criar arquivo.\n");
@@ -333,13 +326,13 @@ void criarArquivo(TVertice *diretorioAtual, const char *nomeArquivo) {
   // Criar o novo no para o arquivo
   TVertice *novoArquivoNo = criarNo(nomeArquivo, novoPath, 'a');
 
-  // Adicionar o novo arquivo ‡ lista de filhos do diret' atual
+  // Adicionar o novo arquivo ‡ lista de filhos do diretorio atual
   inserirNo(diretorioAtual, novoArquivoNo);
 
   printf("Arquivo criado com sucesso: %s\n", novoArquivoNo->path);
 }
 
-// fun' para remover um arquivo do diret' atual
+// funcao para remover um arquivo do diretorio atual
 void removerArquivo(TVertice *diretorioAtual, const char *nomeArquivo) {
   // Verificar se o arquivo existe
   TVertice *filho = diretorioAtual->filhos;
@@ -376,7 +369,7 @@ void removerArquivo(TVertice *diretorioAtual, const char *nomeArquivo) {
   printf("Arquivo removido com sucesso: %s\n", nomeArquivo);
 }
 
-// fun' para liberar a memoria da estrutura de diret's e arquivos
+// funcao para liberar a memoria da estrutura de diretorios e arquivos
 void liberarMemoria(TVertice *diretorio) {
   if (diretorio == NULL) {
     return;
@@ -403,7 +396,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  // Criar a raiz da Arvore de diret's
+  // Criar a raiz da Arvore de diretorios
   TVertice *raiz = criarNo("", argv[1], 'd');
 
   TVertice *diretorioAtual = raiz;
@@ -413,14 +406,14 @@ int main(int argc, char *argv[]) {
   char comando;
   carregarDiretorio(diretorioAtual);
   do {
-    printf("\nComandos disponÌveis:\n");
-    printf("a - criar arquivo\n");
-    printf("m - criar diret'\n");
-    printf("c - mudar diret' corrente\n");
-    printf("d - remover um arquivo\n");
-    printf("p - Apresentar a Arvore realizando um percurso em profundidade\n");
-    printf("l - Apresentar a Arvore realizando um percurso em largura\n");
-    printf("s - sair\n");
+    printf("\nComandos disponíveis:\n");
+    printf("(a) criar arquivo\n");
+    printf("(m) - criar diretório\n");
+    printf("(c) - mudar diretório atual\n");
+    printf("(d) - remover um arquivo\n");
+    printf("(p) - Apresentar a árvore realizando um percurso em profundidade\n");
+    printf("(l) - Apresentar a árvore realizando um percurso em largura\n");
+    printf("(s) - sair\n");
     printf("Digite o comando: ");
 
     scanf(" %c", &comando);
@@ -428,7 +421,7 @@ int main(int argc, char *argv[]) {
     switch (comando) {
 
     case 'a': {
-      // Acrescentar um arquivo ao diret' atual
+      // Acrescentar um arquivo ao diretorio atual
       char nomeArquivo[IDNAME + 1];
       printf("Digite o nome do arquivo a ser inserido: ");
       scanf("%s", nomeArquivo);
@@ -446,7 +439,7 @@ int main(int argc, char *argv[]) {
       printf("Diretorio corrente alterado para: %s\n", diretorioAtual->path);
       break;
     case 'd': {
-      // Remover um arquivo do diret' atual
+      // Remover um arquivo do diretorio atual
       char nomeArquivoRemover[IDNAME + 1];
       printf("Digite o nome do arquivo a ser removido: ");
       scanf("%s", nomeArquivoRemover);
@@ -469,7 +462,7 @@ int main(int argc, char *argv[]) {
     }
   } while (comando != 's');
 
-  // Liberar a memoria alocada para a Arvore de diret's
+  // Liberar a memoria alocada para a Arvore de diretorios
   liberarMemoria(raiz);
 
   return 0;
