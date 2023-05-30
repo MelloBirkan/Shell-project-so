@@ -1,3 +1,12 @@
+/*
+Amanda Gois Smanioto-42127351
+Alexandre Elizer Fortes-32088353
+Caue Moeta-42144914
+Daniela Brazolin Flauto-42130581
+Marcello Gonzatto Birkan-42020034
+Thiago Leandro Liporace-421284818
+*/
+  
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -105,6 +114,16 @@ void percorrerProfundidade(TVertice *no) {
     percorrerProfundidade(filho);
     filho = filho->prox;
   }
+}
+
+TVertice* voltarPastaPai(TVertice* diretorioAtual) {
+  if (diretorioAtual->dir_ant != NULL) {
+    diretorioAtual = diretorioAtual->dir_ant;
+    printf("Diretório atual: %s\n", diretorioAtual->path);
+  } else {
+    printf("Estamos no diretório raiz, não há um diretório pai para voltar.\n");
+  }
+  return diretorioAtual;
 }
 
 // funçao para percorrer em largura
@@ -284,20 +303,23 @@ TVertice *mudarDiretorioCorrente(TVertice *diretorioAtual,
 
 TVertice *mudarDiretorio(TVertice *carregarDiretorio,
                          const char *nomeDiretorio) {
+  // Verificar se carregarDiretorio é nulo
+  if (carregarDiretorio == NULL) {
+    printf("Erro: carregarDiretorio é nulo\n");
+    return NULL;
+  }
+
   // Encontrar o diretorio solicitado
-  TVertice *filho = diretorioAtual->filhos;
+  TVertice *filho = carregarDiretorio->filhos;
 
   while (filho != NULL) {
-
     if (strcmp(filho->id, nomeDiretorio) == 0) {
       printf("Diretorio encontrado: %s\n", filho->path);
       return filho;
     }
     filho = filho->prox;
   }
-
-  printf("Erro:Diretorio '%s' n„o encontrado.\n", nomeDiretorio);
-  return diretorioAtual;
+  return NULL;
 }
 
 void criarArquivo(TVertice *diretorioAtual, const char *nomeArquivo) {
@@ -407,12 +429,14 @@ int main(int argc, char *argv[]) {
   carregarDiretorio(diretorioAtual);
   do {
     printf("\nComandos disponíveis:\n");
-    printf("(a) criar arquivo\n");
+    printf("(a) - criar arquivo\n");
     printf("(m) - criar diretório\n");
     printf("(c) - mudar diretório atual\n");
     printf("(d) - remover um arquivo\n");
-    printf("(p) - Apresentar a árvore realizando um percurso em profundidade\n");
+    printf(
+        "(p) - Apresentar a árvore realizando um percurso em profundidade\n");
     printf("(l) - Apresentar a árvore realizando um percurso em largura\n");
+    printf("(u) - Voltar ao diretorio pai\n");
     printf("(s) - sair\n");
     printf("Digite o comando: ");
 
@@ -435,6 +459,7 @@ int main(int argc, char *argv[]) {
       break;
     case 'c':
       diretorioAtual = mudarDiretorioCorrente(diretorioAtual, diretorioOrigem);
+      carregarDiretorio(diretorioAtual);
       // diretorioAtual = mudarDiretorioCorrente(diretorioAtual, raiz);
       printf("Diretorio corrente alterado para: %s\n", diretorioAtual->path);
       break;
@@ -456,8 +481,11 @@ int main(int argc, char *argv[]) {
     case 's':
       printf("Encerrando o programa.\n");
       break;
+      case 'u': 
+        voltarPastaPai(diretorioAtual);
+                break;
     default:
-      printf("Comando inv·lido. Tente novamente.\n");
+      printf("Comando invalido. Tente novamente.\n");
       break;
     }
   } while (comando != 's');
